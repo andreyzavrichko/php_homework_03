@@ -130,3 +130,26 @@ function task2()
     var_export(diffArray($outputDataOne, $outputDataTwo));
     echo '</pre>';
 }
+
+function task3()
+{
+    $arraySomeNumbers = [];
+    for ($i = 0; $i < 50; $i++) {
+        $arraySomeNumbers[] = mt_rand(1, 100);
+    }
+
+    $newCSVFile = fopen('numbers.csv', 'w');
+    fputcsv($newCSVFile, $arraySomeNumbers, ';');
+    fclose($newCSVFile);
+
+    $newCSVFile = fopen('numbers.csv', 'r');
+    while (($line = fgetcsv($newCSVFile, 0, ";")) !== false) {
+        $arrayFromCsv = $line;
+    }
+
+    $sum = array_reduce($arrayFromCsv, function ($result, $value) {
+        return $value % 2 === 0 ? $result + $value : $result;
+    }, 0);
+
+    echo '<pre>Сумма четных чисел из csv файла равна: <b>' . $sum . '</b></pre>';
+}
