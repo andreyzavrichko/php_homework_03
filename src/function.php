@@ -59,3 +59,74 @@ function task1(string $fileName)
     }
     echo '</div>';
 }
+
+function task2()
+{
+    echo '<pre>';
+
+
+    $outputArray = [
+        'users' => [
+            [
+                'id' => '01',
+                'name' => 'Vasya',
+                'email' => 'vasia@mail.ru',
+                'phone' => '+4564523154',
+                'addFriend' => false,
+            ],
+            [
+                'id' => '02',
+                'name' => 'Dima',
+                'email' => 'dima@mail.ru',
+                'phone' => '+85642154',
+                'addFriend' => false,
+            ],
+            [
+                'id' => '03',
+                'name' => 'Marina',
+                'email' => 'marina@mail.ru',
+                'phone' => '+9655421321',
+                'addFriend' => false,
+            ],
+        ]
+    ];
+
+    file_put_contents('output.json', json_encode($outputArray));
+
+    $fileJsonOutput = file_get_contents('output.json');
+    $outputData = json_decode($fileJsonOutput, true);
+
+    $outputArray2['users'] = array_map(function ($user) {
+        $user['AddFriend'] = rand(0, 1) ? true : false;
+
+        return $user;
+    }, $outputData['users']);
+
+    file_put_contents('output2.json', json_encode($outputArray2));
+
+    $fileJsonOutputOne = file_get_contents('output.json');
+    $fileJsonOutputTwo = file_get_contents('output2.json');
+    $outputDataOne = json_decode($fileJsonOutputOne, true);
+    $outputDataTwo = json_decode($fileJsonOutputTwo, true);
+
+    function diffArray(array $firstArray, array $secondArray)
+    {
+        $resultDiffArray = [];
+        foreach ($firstArray as $key => $value) {
+            if (is_array($value)) {
+                $new = diffArray($value, $secondArray[$key]);
+                if ($new) {
+                    $resultDiffArray[$key] = $new;
+                }
+            } else {
+                $diff = array_diff($secondArray, $firstArray);
+                if ($diff) {
+                    return $diff;
+                }
+            }
+        }
+        return $resultDiffArray;
+    }
+    var_export(diffArray($outputDataOne, $outputDataTwo));
+    echo '</pre>';
+}
