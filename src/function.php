@@ -153,3 +153,30 @@ function task3()
 
     echo '<pre>Сумма четных чисел из csv файла равна: <b>' . $sum . '</b></pre>';
 }
+
+function task4()
+{
+    echo '<pre>';
+    $jsonData = file_get_contents(
+        'https://en.wikipedia.org/w/api.php?action=query&titles=Main%20Page&prop=revisions&rvprop=content&format=json'
+    );
+    $data = json_decode($jsonData, true);
+    function searchKey($searchKey, array $arr)
+    {
+        if (isset($arr[$searchKey])) {
+            return $arr[$searchKey];
+        }
+        foreach ($arr as $key => $param) {
+            if (is_array($param)) {
+                $res = searchKey($searchKey, $param);
+                if ($res) {
+                    return $res;
+                }
+            }
+        }
+    }
+    $pageid = searchKey('pageid', $data);
+    $title = searchKey('title', $data);
+    echo '<pre> Значение title: <b>' . $title . '</b></pre>';
+    echo '<pre> Значение pageid: <b>' . $pageid . '</b></pre>';
+}
